@@ -6,6 +6,6 @@
 - Basically yearly, monthly data
 - Data between 01,2003 and 12,2019
 - Data lists
-  * U.S Beef, Commercial Production Data (value is estimated by dollar($))
-  * U.S Beef, Quantity and Value(dollar($))
+  * U.S Beef, Commercial Production Data (value is estimated by dollars($))
+  * U.S Beef, Quantity and Value(dollars($))
 
