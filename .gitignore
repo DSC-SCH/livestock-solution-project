@@ -24,6 +24,7 @@ pip-selfcheck.json
 .idea/**/dictionaries
 .idea/**/shelf
 
+*.ipynb_checkpoints/*
 # Generated files
 .idea/**/contentModel.xml
 
