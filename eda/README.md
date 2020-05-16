@@ -4,7 +4,7 @@
 
 #### Data Description
 - Basically yearly, monthly data
-- Data between 01,2003 and 12,2019
+- Data between 01,2013 and 12,2018
 - Data lists
   - Feature data
     * U.S Beef, Commercial Production Data (value is estimated by dollars($))
