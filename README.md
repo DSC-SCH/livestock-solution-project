@@ -1,1 +1,0 @@
-# livestock-solution-project
