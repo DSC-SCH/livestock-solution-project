@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
 
 from lxml import etree  #xml 파일을 열 때 사용하는 코드
 import xml.etree.ElementTree as ElementTree  #xml파일을 여는 코드
@@ -11,21 +9,6 @@ import pandas as pd
 from urllib.request import urlopen
 from urllib.parse import urlencode,unquote,quote_plus
 import urllib
-
-
-# In[3]:
-
-
-# api주소 열기 (url + 인증키 + 해당페이지+한 화면에 출력되는 데이터 개수)
-request = urllib.request.Request('http://apis.data.go.kr/1543000/FarmServiceInfo/getFarmCategoryInfo?serviceKey=70chvGVOwguGdjPrpZL063fX50H6oufjCGWQ77SQ2AL0mOHl9nzn58ipR1dB5G0rjNmt7Xhj%2FZ3pPAXRBOq5Ig%3D%3D&pageNo=1&numOfRows=10&lvstck_code=412000')
-
-request.get_method = lambda: 'GET'
-response_body = urlopen(request).read()
-# 추출된 xml형식의 text를 xml객체로 파싱
-tree = etree.fromstring(response_body)
-
-
-# In[ ]:
 
 
 # 빈 벡터 생서
@@ -42,7 +25,7 @@ i = []
 for page in range(1,170):   
     
     # api주소 열기 (url + 인증키 + 해당페이지+한 화면에 출력되는 데이터 개수)
-    request = urllib.request.Request('http://apis.data.go.kr/1543000/FarmServiceInfo/getFarmCategoryInfo?serviceKey=70chvGVOwguGdjPrpZL063fX50H6oufjCGWQ77SQ2AL0mOHl9nzn58ipR1dB5G0rjNmt7Xhj%2FZ3pPAXRBOq5Ig%3D%3D&pageNo='
+    request = urllib.request.Request('http://apis.data.go.kr/1543000/FarmServiceInfo/getFarmCategoryInfo?serviceKey=#&pageNo='
                                      +str(page)+'&numOfRows=1000&lvstck_code=412000')
     
     request.get_method = lambda: 'GET'
