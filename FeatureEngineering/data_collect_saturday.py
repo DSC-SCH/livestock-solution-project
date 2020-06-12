@@ -17,7 +17,7 @@ from sqlalchemy import create_engine
 import numpy as np
 
 # ddd서버에 맞게 변경
-db = pymysql.connect(host='localhost', user='root', password='seonga', db='ddd')
+db = pymysql.connect(host='localhost', user='root', password='#', db='ddd')
 curs = db.cursor()
 
 # -------------------------------------------------------------
@@ -281,7 +281,7 @@ weather_processing = df.iloc[0:len(df)-1]
 
 final_data = pd.merge(price_processing, weather_processing, how='inner', on=['week_date'])
 
-engine = create_engine("mysql+mysqldb://root:" + "seonga" + "@localhost/ddd", encoding='utf-8')
+engine = create_engine("mysql+mysqldb://root:" + "password" + "@localhost/ddd", encoding='utf-8')
 conn = engine.connect()
 
 # if_exists = "append": 기존 데이터에 추가로 넣음.
