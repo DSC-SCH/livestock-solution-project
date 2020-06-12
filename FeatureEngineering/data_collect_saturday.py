@@ -248,11 +248,11 @@ data_group = data.groupby(['date']).mean()
 
 data_group.index = pd.to_datetime(data_group.index, format = '%Y-%m-%d')
 
+day_7 = pd.date_range(start=data_group.index[0]-datetime.timedelta(1), end=data_group.index[len(data_group) - 1]+datetime.timedelta(7), freq='W')  # 주별 데이터 생성    
+day_7 = pd.to_datetime(day_7, format="%Y-%m-%d")
+day_7 = pd.DataFrame(day_7, columns=['week_date'])
+
 def mean_week(col_):
-    
-    day_7 = pd.date_range(start=data_group.index[0]-datetime.timedelta(1), end=data_group.index[len(data_group) - 1]+datetime.timedelta(7), freq='W')  # 주별 데이터 생성    
-    day_7 = pd.to_datetime(day_7, format="%Y-%m-%d")
-    day_7 = pd.DataFrame(day_7, columns=['week_date'])
 
     avg_7 = []
 
