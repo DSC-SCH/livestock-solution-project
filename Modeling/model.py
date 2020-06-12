@@ -50,12 +50,13 @@ def transform(data):
     train, test = train_test_split(data, test_size=0.3, random_state=123, shuffle = False)
     
     # 첫번째 feature normailization -> 칼럼명 전처리 코드에 맞게 변경해줘야함!
-    train_x = scaler.fit_transform(train.drop(['주간날짜','y_value'],axis=1))
-    test_x = scaler.transform(test.drop(['주간날짜','y_value'],axis=1))
+    scaler = MinMaxScaler()
+    train_x = scaler.fit_transform(train.drop(['week_date','y_value'],axis=1))
+    test_x = scaler.transform(test.drop(['week_date','y_value'],axis=1))
     train_y = scaler.fit_transform(pd.DataFrame(train['y_value']))
     test_y = scaler.transform(pd.DataFrame(test['y_value']))
 
-    feature_names = list(data.drop(['주간날짜','y_value'],axis=1).columns)
+    feature_names = list(data.drop(['week_date','y_value'],axis=1).columns)
 
     # Feature Selection
     clf = linear_model.LinearRegression()
