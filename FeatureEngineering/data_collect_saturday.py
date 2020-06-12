@@ -35,7 +35,7 @@ price_df = []
 for date_ in crawl_dates:
     # service key 발급받은 후 # 을 변경
     request = urllib.request.Request(
-        "http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct?serviceKey=70chvGVOwguGdjPrpZL063fX50H6oufjCGWQ77SQ2AL0mOHl9nzn58ipR1dB5G0rjNmt7Xhj%2FZ3pPAXRBOq5Ig%3D%3D&auctDate=" + str(
+        "http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct?serviceKey=#&auctDate=" + str(
             date_) + "&auctFlag=2")
 
     request.get_method = lambda: 'GET'
@@ -61,7 +61,7 @@ db.commit()
 # 기상 관측 데이터 수집
 # -------------------------------------------------------------
 
-url = 'http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList?serviceKey=70chvGVOwguGdjPrpZL063fX50H6oufjCGWQ77SQ2AL0mOHl9nzn58ipR1dB5G0rjNmt7Xhj%2FZ3pPAXRBOq5Ig%3D%3D'
+url = 'http://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList?serviceKey=#'
 
 # w지역별 코드
 stnlds = [90, 93, 95, 98, 99, 100, 101, 102, 104, 105, 106, 108, 112, 114, 115, 119,
