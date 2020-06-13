@@ -24,8 +24,6 @@ warnings.filterwarnings(action='ignore')
 
 def transform(data):
     
-    # 관측치에서 결측치 발생하면 결측치 값은 이전 값으로 대체
-    data = data.fillna(method='ffill')
 
     # 원본 데이터의 '한우가격' 값 한칸씩 떙겨서 우리가 맞출려는 y_value 생성
     data['y_value'] = None
