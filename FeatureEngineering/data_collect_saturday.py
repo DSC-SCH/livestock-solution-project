@@ -55,6 +55,7 @@ data_price = pd.DataFrame({'date': date_df, 'place': place_df, 'price': price_df
 data_price = data_price.fillna(method='ffill')
 
 data_price.to_sql(name='hanwoo_price', con=engine, index=False, if_exists="append")
+conn.close()
      
 # -------------------------------------------------------------
 # 기상 관측 데이터 수집
@@ -191,8 +192,12 @@ data_weather = pd.DataFrame(
 
 data_weather = data_weather.fillna(method='ffill')
 
+engine = create_engine("mysql+mysqldb://root:" + "password" + "@localhost/ddd", encoding='utf-8')
+conn = engine.connect()
+
 data_weather.to_sql(name='weather', con=engine, index=False, if_exists="append")
 
+conn.close()
 # -------------------------------------------------------------
 # hanwoo price 데이터 전처리
 # -------------------------------------------------------------
