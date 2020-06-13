@@ -16,9 +16,8 @@ import pymysql
 from sqlalchemy import create_engine
 import numpy as np
 
-# ddd서버에 맞게 변경
-db = pymysql.connect(host='localhost', user='root', password='#', db='ddd')
-curs = db.cursor()
+engine = create_engine("mysql+mysqldb://root:" + "password" + "@localhost/ddd", encoding='utf-8')
+conn = engine.connect()
 
 # -------------------------------------------------------------
 # hanwoo price 데이터 수집
@@ -47,16 +46,16 @@ for date_ in crawl_dates:
         place = media.findtext("abattNm")
         date = media.findtext("auctDate")
         price = media.findtext("hanwooAuctAmt")
-
-        query = "INSERT IGNORE INTO hanwoo_price(date, place, price) VALUES(%s,%s,%s)"
-        curs.execute(query, (date, place, price))
-
+        
         place_df.append(place)
         date_df.append(date)
         price_df.append(price)
+        
+data_price = pd.DataFrame({'date': date_df, 'place': place_df, 'price': price_df})
+data_price = data_price.fillna(method='ffill')
 
-db.commit()
-
+data_price.to_sql(name='hanwoo_price', con=engine, index=False, if_exists="append")
+     
 # -------------------------------------------------------------
 # 기상 관측 데이터 수집
 # -------------------------------------------------------------
@@ -167,11 +166,6 @@ for stnld in stnlds:
         else:
             hr1_maxicsr = hr1_maxicsr.text
 
-        query = "INSERT IGNORE INTO weather(stnld, date, avg_ta, max_ta, min_ta, sum_rn, sum_sshr, max_insws, max_ws,sum_gsr,avg_ts,min_rhm,avg_rhm,avg_ws,hr1_maxicsr) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        curs.execute(query, (
-            stnld, date, avg_ta, max_ta, min_ta, sum_rn, sum_sshr, max_insws, max_ws, sum_gsr, avg_ts, min_rhm, avg_rhm,
-            avg_ws, hr1_maxicsr))
-
         # 변수명에 맞게 각 리스트에 담기
         stnld_lst.append(stnld)
         date_lst.append(date)
@@ -189,27 +183,32 @@ for stnld in stnlds:
         avg_ws_lst.append(avg_ws)
         hr1_maxicsr_lst.append(hr1_maxicsr)
 
-db.commit()
-db.close()
+data_weather = pd.DataFrame(
+    {'date': date_lst, 'avg_ta': avg_ta_lst, 'max_ta': max_ta_lst, 'min_ta': min_ta_lst, 'sum_rn': sum_rn_lst,
+     'sum_sshr': sum_sshr_lst, 'max_insws': max_insws_lst, 'max_ws': max_ws_lst, 'sum_gsr': sum_gsr_lst,
+     'avg_ts': avg_ts_lst,
+     'min_rhm': min_rhm_lst, 'avg_rhm': avg_rhm_lst, 'avg_ws': avg_ws_lst, 'hr1_maxicsr': hr1_maxicsr_lst})
+
+data_weather = data_weather.fillna(method='ffill')
+
+data_weather.to_sql(name='weather', con=engine, index=False, if_exists="append")
 
 # -------------------------------------------------------------
 # hanwoo price 데이터 전처리
 # -------------------------------------------------------------
 # hanwoo price 주간데이터로 변환
-data = pd.DataFrame({'date': date_df, 'place': place_df, 'price': price_df})
 
-data = data[data['place'] == '전국']
-data = data.drop(['place'], axis=1)
+data_price = data_price[data_price['place'] == '전국']
+data_price = data_price.drop(['place'], axis=1)
 
-data = data.reset_index()
-del data['index']
+data_price = data_price.reset_index()
+del data_price['index']
 
-data = data.fillna(method='ffill')
-data['price'] = data['price'].astype('int')
+data_price['price'] = data_price['price'].astype('int')
 
-data['date'] = pd.to_datetime(data['date'], format = '%Y-%m-%d')
+data_price['date'] = pd.to_datetime(data_price['date'], format = '%Y-%m-%d')
 
-day_7 = pd.date_range(start=data['date'][0]-datetime.timedelta(1), end=data['date'][len(data) - 1]+datetime.timedelta(7), freq='W')  # 주별 데이터 생성
+day_7 = pd.date_range(start=data_price['date'][0]-datetime.timedelta(1), end=data_price['date'][len(data_price) - 1]+datetime.timedelta(7), freq='W')  # 주별 데이터 생성
 day_7 = pd.to_datetime(day_7, format="%Y-%m-%d")
 day_7 = pd.DataFrame(day_7, columns=['week_date'])
 
@@ -217,9 +216,9 @@ price_7 = []
 
 for x in range(len(day_7) - 1):
     a = []
-    for i in range(len(data)):
-        if data['date'][i] >= day_7['week_date'][x] and data['date'][i] < day_7['week_date'][x + 1]:
-            a.append(data['price'][i])
+    for i in range(len(data_price)):
+        if data_price['date'][i] >= day_7['week_date'][x] and data_price['date'][i] < day_7['week_date'][x + 1]:
+            a.append(data_price['price'][i])
     price_7.append(np.mean(a))
 
 price_7 = pd.DataFrame(price_7, columns=['price_mean'])
@@ -229,22 +228,14 @@ price_processing = price_processing.iloc[0:len(price_processing)-1]
 # -------------------------------------------------------------
 # 기상관측 데이터 전처리
 # -------------------------------------------------------------
-data = pd.DataFrame(
-    {'date': date_lst, 'avg_ta': avg_ta_lst, 'max_ta': max_ta_lst, 'min_ta': min_ta_lst, 'sum_rn': sum_rn_lst,
-     'sum_sshr': sum_sshr_lst, 'max_insws': max_insws_lst, 'max_ws': max_ws_lst, 'sum_gsr': sum_gsr_lst,
-     'avg_ts': avg_ts_lst,
-     'min_rhm': min_rhm_lst, 'avg_rhm': avg_rhm_lst, 'avg_ws': avg_ws_lst, 'hr1_maxicsr': hr1_maxicsr_lst})
-
 
 features = ['avg_ta', 'max_ta', 'min_ta', 'sum_rn', 'sum_sshr', 'max_insws', 'max_ws', 'sum_gsr', 'avg_ts', 'min_rhm',
             'avg_rhm', 'avg_ws', 'hr1_maxicsr']
 
 # data type이 object로 들어가있으므로 수정 필요
-data[features] = data[features].astype(float)
+data_weather[features] = data_weather[features].astype(float)
 
-data = data.fillna(method='ffill')
-
-data_group = data.groupby(['date']).mean()
+data_group = data_weather.groupby(['date']).mean()
 
 data_group.index = pd.to_datetime(data_group.index, format = '%Y-%m-%d')
 
