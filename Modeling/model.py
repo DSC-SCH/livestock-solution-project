@@ -16,11 +16,19 @@ from keras.models import load_model # 2.3.1 version # 모델 저장하고 로드
 from mlxtend.feature_selection import SequentialFeatureSelector as sfs # 0.17.2 version
 from sklearn import datasets, linear_model 
 from sklearn.model_selection import train_test_split, GridSearchCV # scikit-learn 0.23.1
+
 from sqlalchemy import create_engine
+import pymysql
 
 warnings.filterwarnings(action='ignore')
 
+# ddd db에 맞게 수정
+engine = create_engine("mysql+mysqldb://root:" + "#" + "@localhost/ddd", encoding='utf-8')
+conn = engine.connect()
 
+data = pd.read_sql_table(table_name='week_data', con = engine)
+
+conn.close()
 
 def transform(data):
     
@@ -29,7 +37,7 @@ def transform(data):
     data['y_value'] = None
     
     for i in range(0,(len(data)-1)):
-        data['y_value'][i] = data['y_value'][i+1]
+        data['y_value'][i] = data['price_mean'][i+1]
         
     data['y_value'] = data['y_value'].astype('float')
     
@@ -42,11 +50,13 @@ def transform(data):
     data['lag15_price'] = data['y_value'].shift(15)
 
     # 원본 데이터의 '한우가격' 삭제
-    del data['y_value']
+    del data['price_mean']
 
     # lag변수로 인해 생기는 결측치 제거
     data = data.iloc[15:len(data),]
     data = data.reset_index()
+    data = data.fillna(method = 'ffill')
+    
     del data['index']
 
     # train, test data 나누기 -> 이것도 데이터업데이트할 때마다 바꿔주어야할 것 같은데..
@@ -101,12 +111,6 @@ def transform(data):
     
     #미래 예측값 1개 return
     return y_hat[-1]
-
-# ddd db에 맞게 수정
-engine = create_engine('mysql://root:password@localhost/table', convert_unicode=True)
-
-data = pd.read_sql_table(table_name='week_data', con = engine)
-
 
 if __name__ == '__main__':
     print(transform(data))
