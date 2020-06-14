@@ -29,7 +29,7 @@ def transform(data):
     data['y_value'] = None
     
     for i in range(0,(len(data)-1)):
-        data['y_value'][i] = data['한우 평균경매 금액_주간평균'][i+1]
+        data['y_value'][i] = data['y_value'][i+1]
         
     data['y_value'] = data['y_value'].astype('float')
     
@@ -42,7 +42,7 @@ def transform(data):
     data['lag15_price'] = data['y_value'].shift(15)
 
     # 원본 데이터의 '한우가격' 삭제
-    del data['한우 평균경매 금액_주간평균']
+    del data['y_value']
 
     # lag변수로 인해 생기는 결측치 제거
     data = data.iloc[15:len(data),]
