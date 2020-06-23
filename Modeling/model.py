@@ -31,8 +31,7 @@ data = pd.read_sql_table(table_name='week_data', con = engine)
 conn.close()
 
 def transform(data):
-    
-
+        
     # 원본 데이터의 '한우가격' 값 한칸씩 떙겨서 우리가 맞출려는 y_value 생성
     data['y_value'] = None
     
