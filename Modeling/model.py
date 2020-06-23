@@ -32,6 +32,9 @@ conn.close()
 
 def transform(data):
         
+    data['price_mean'] = data['price_mean'].replace(0.0,np.nan)
+    data = data.fillna(method='ffill')
+   
     # 원본 데이터의 '한우가격' 값 한칸씩 떙겨서 우리가 맞출려는 y_value 생성
     data['y_value'] = None
     
