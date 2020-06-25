@@ -209,7 +209,7 @@ data_price = data_price.drop(['place'], axis=1)
 data_price = data_price.reset_index()
 del data_price['index']
 
-data_price['price'] = data_price['price'].astype('int')
+data_price['price'] = data_price['price'].astype('float')
 
 data_price['date'] = pd.to_datetime(data_price['date'], format = '%Y-%m-%d')
 
