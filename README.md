@@ -87,17 +87,15 @@ pip3 install -r requirements.txt
 1. data_collect_saturday.py  # 작업스케줄러를 이용하여 매주 토요일 특정 시각에 데이터가 수집되도록 설정 
 2. model.py  # 작업 스케줄러를 이용하여 데이터가 수집된 후 모델을 적용할 수 있도록 설정 
 ```
-- 실행 전 수정 필요 
-
-> engine = create_engine("mysql+mysqldb://root:" + "password" + "@localhost/ddd", encoding='utf-8')   
-db_host: MySQL HOST 주소   
+* 실행 전 수정이 필요한 부분
+   * engine = create_engine("mysql+mysqldb://root:" + "password" + "@localhost/ddd", encoding='utf-8')
+   * request = urllib.request.Request(
+        "http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct?serviceKey=#&auctDate=" + str(
+            date_) + "&auctFlag=2")  
+> db_host: MySQL HOST 주소   
 db_user: MySQL 아이디  (root)   
 db_passwd: MySQL 패스워드   (password)   
 db_port: MySQL 포트  (@localhost)   
 db_name: DB name명    (ddd)    
-
-> request = urllib.request.Request(
-        "http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct?serviceKey=#&auctDate=" + str(
-            date_) + "&auctFlag=2")   
- serviceKey: openapi 서비스키 (#)
+serviceKey: openapi 서비스키 (#)
 
