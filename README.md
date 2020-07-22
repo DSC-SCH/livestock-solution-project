@@ -45,8 +45,7 @@
   |  |-02. 파생변수 생성.ipynb            # 모델 적용 전 파생변수를 생성하는 코드 
   |  |-03.resetting_feature_y.ipynb       # 목적에 맞게 y를 재설정하는 코드 
   |  |-data_collect_saturday.py               # 매주 토요일마다 정기적으로 데이터 수집 후 DB에 저장하는 코드 
-  |  |-hanwoo_before_price.py      # 전처리 된 한우 가격 csv 파일을 DB에 저장하는 코드 
-  |  |-hanwoo_price_collection.py     # 한우 가격을 전처리하는 코드 
+  |  |-hanwoo_price_collection.py     # 한우 가격을 전처리한 후 DB에 저장하는 코드 
   |  |-week_price.py      # 주별 데이터로 변환한 후 DB에 저장하는 코드
   |
   |-Modeling
@@ -89,9 +88,18 @@ pip3 install -r requirements.txt
 2. model.py  # 작업 스케줄러를 이용하여 데이터가 수집된 후 모델을 적용할 수 있도록 설정 
 ```
 - 실행 전 수정 필요 
-> db_host: MySQL HOST 주소  
-db_user: MySQL 아이디  
-db_passwd: MySQL 패스워드   
-db_port: MySQL 포트  
-servicekey: openapi 서비스키 
+
+> engine = create_engine("mysql+mysqldb://root:" + "password" + "@localhost/ddd", encoding='utf-8')   
+
+> db_host: MySQL HOST 주소   
+db_user: MySQL 아이디  (root)   
+db_passwd: MySQL 패스워드   (password)   
+db_port: MySQL 포트  (@localhost)   
+db_name: DB name명    (ddd)    
+
+> request = urllib.request.Request(
+        "http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct?serviceKey=#&auctDate=" + str(
+            date_) + "&auctFlag=2")
+            
+>serviceKey: openapi 서비스키 (#)
 
