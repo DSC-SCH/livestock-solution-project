@@ -105,9 +105,7 @@ def transform(data):
     # predict
     y_hat = model.predict(test_X, batch_size=1)
     y_hat = scaler.inverse_transform(y_hat)
-    
-    # save the model
-    #joblib.dump(model, '백엔드_디렉토리_경로/model.pkl')- 백앤드에 해당 경로 입력해주라고 말해주기
+   
     
     #미래 예측값 1개 return
     return y_hat[-1]
