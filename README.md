@@ -90,8 +90,7 @@ pip3 install -r requirements.txt
 - 실행 전 수정 필요 
 
 > engine = create_engine("mysql+mysqldb://root:" + "password" + "@localhost/ddd", encoding='utf-8')   
-
-> db_host: MySQL HOST 주소   
+db_host: MySQL HOST 주소   
 db_user: MySQL 아이디  (root)   
 db_passwd: MySQL 패스워드   (password)   
 db_port: MySQL 포트  (@localhost)   
@@ -99,7 +98,6 @@ db_name: DB name명    (ddd)
 
 > request = urllib.request.Request(
         "http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct?serviceKey=#&auctDate=" + str(
-            date_) + "&auctFlag=2")
-            
->serviceKey: openapi 서비스키 (#)
+            date_) + "&auctFlag=2")   
+ serviceKey: openapi 서비스키 (#)
 
