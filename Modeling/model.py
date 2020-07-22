@@ -59,10 +59,10 @@ def transform(data):
     
     del data['index']
 
-    # train, test data 나누기 -> 이것도 데이터업데이트할 때마다 바꿔주어야할 것 같은데..
+    # train, test data 나누기 
     train, test = train_test_split(data, test_size=0.3, random_state=123, shuffle = False)
     
-    # 첫번째 feature normailization -> 칼럼명 전처리 코드에 맞게 변경해줘야함!
+    # 첫번째 feature normailization 
     scaler = MinMaxScaler()
     train_x = scaler.fit_transform(train.drop(['week_date','y_value'],axis=1))
     test_x = scaler.transform(test.drop(['week_date','y_value'],axis=1))
